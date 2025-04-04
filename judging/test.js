@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import judge from "./judge.js"
 
-const testAgentID = 'sample_agent'; 
+const testAgentID = 'sample'; 
 const submissionURL = "https://medium.com/@meric.emmanuel/things-only-senior-react-engineers-know-618d81154cb6";
 const numberOfQueries = 3;
 
