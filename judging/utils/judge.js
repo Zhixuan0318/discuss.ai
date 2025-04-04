@@ -3,9 +3,9 @@ import { ChatOpenAI } from '@langchain/openai';
 import { z } from 'zod';
 import { agentFetcher } from './utils/agentFetcher.js';
 import { planner } from './utils/planner.js';
-import promptTemplate from './utils/promptTemplate.js';
-import { webLoader } from './utils/web-loader.js';
-import { totalScoreCalc } from './utils/totalScoreCalc.js';
+import promptTemplate from './promptTemplate.js';
+import { webLoader } from './web-loader.js';
+import { totalScoreCalc } from './totalScoreCalc.js';
 
 // Initialize the OpenAI API key from environment variables
 const openaiApiKey = process.env.OPENAI_API_KEY;
