@@ -9,19 +9,36 @@
     --secondary: #9ba3ae;
     --tetriary: #b1b1b1;
     --quaternary: #ebecef;
-}
 
-@layer base {
+    --button-hover: #434343;
+
+    --color-1: 0 100% 63%;
+    --color-2: 270 100% 63%;
+    --color-3: 210 100% 63%;
+    --color-4: 195 100% 63%;
+    --color-5: 90 100% 63%;
 }
 
 @layer components {
+    .primary-button {
+        padding: 0.875rem 1.375rem;
+
+        display: flex;
+        align-items: center;
+        column-gap: 0.5rem;
+
+        color: var(--background);
+        background-color: var(--foreground);
+        border-radius: 0.625rem;
+    }
+
+    .primary-button:hover {
+        background-color: var(--button-hover);
+    }
 }
 
 body {
     font-size: 16px;
     font-weight: 400;
     font-family: var(--font-sora);
-    color: var(--foreground);
-
-    background: var(--background);
 }
