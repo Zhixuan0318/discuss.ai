@@ -11,6 +11,7 @@
     --quaternary: #ebecef;
 
     --button-hover: #434343;
+    --transparent: rgba(1, 1, 1, 0.5);
 
     --color-1: 0 100% 63%;
     --color-2: 270 100% 63%;
@@ -25,15 +26,45 @@
 
         display: flex;
         align-items: center;
+        justify-content: center;
         column-gap: 0.5rem;
 
         color: var(--background);
         background-color: var(--foreground);
         border-radius: 0.625rem;
+
+        transition: all 150ms ease-in-out;
     }
 
     .primary-button:hover {
         background-color: var(--button-hover);
+    }
+
+    .secondary-button {
+        width: fit-content;
+        height: fit-content;
+
+        padding: 1rem;
+        background-color: var(--foreground);
+        border: 1px solid var(--foreground);
+        border-radius: 0.625rem;
+
+        transition: all 150ms ease-in-out;
+    }
+
+    .secondary-button:hover {
+        background-color: var(--background);
+    }
+
+    .secondary-button:hover > img {
+        filter: invert(1);
+    }
+
+    .secondary-selector {
+        padding: 1rem 2rem;
+
+        background: var(--quaternary);
+        border-radius: 1.25rem;
     }
 }
 

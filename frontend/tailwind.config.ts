@@ -14,6 +14,7 @@ const config: Config = {
                 secondary: 'var(--secondary)',
                 tetriary: 'var(--tetriary)',
                 quaternary: 'var(--quaternary)',
+                transparent: 'var(--transparent)',
                 'color-1': 'hsl(var(--color-1))',
                 'color-2': 'hsl(var(--color-2))',
                 'color-3': 'hsl(var(--color-3))',
@@ -31,6 +32,7 @@ const config: Config = {
                 rainbow: 'rainbow var(--speed, 2s) infinite linear',
                 marquee: 'marquee var(--duration) linear infinite',
                 'marquee-vertical': 'marquee-vertical var(--duration) linear infinite',
+                shine: 'shine var(--duration) infinite linear',
             },
             keyframes: {
                 rainbow: {
@@ -48,6 +50,17 @@ const config: Config = {
                 'marquee-vertical': {
                     from: { transform: 'translateY(0)' },
                     to: { transform: 'translateY(calc(-100% - var(--gap)))' },
+                },
+                shine: {
+                    '0%': {
+                        'background-position': '0% 0%',
+                    },
+                    '50%': {
+                        'background-position': '100% 100%',
+                    },
+                    to: {
+                        'background-position': '0% 0%',
+                    },
                 },
             },
         },

@@ -9,6 +9,7 @@ export default function AgentCardSmall({ name, description }: Props) {
     return (
         <figure className='max-w-[370px] p-2 flex items-center gap-x-4 border border-quaternary rounded-3xl'>
             <Image
+                className='rounded-3xl'
                 src={`/images/agent/${name.toLocaleLowerCase().replaceAll(' ', '-')}.png`}
                 alt='agent'
                 width={100}

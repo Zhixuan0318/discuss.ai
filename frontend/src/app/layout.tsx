@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import { Sora, DM_Mono, Rubik } from 'next/font/google';
 
+import WalletProvider from '@/context/WalletProvider';
+import { ModalProvider } from '@/components/ui/animated-modal';
+
+import '@rainbow-me/rainbowkit/styles.css';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -34,7 +38,9 @@ export default function RootLayout({
     return (
         <html lang='en'>
             <body className={`${sora.variable} ${dmMono.variable} ${rubik.variable} antialiased`}>
-                {children}
+                <ModalProvider>
+                    <WalletProvider>{children}</WalletProvider>
+                </ModalProvider>
             </body>
         </html>
     );
