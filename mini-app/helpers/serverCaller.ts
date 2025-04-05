@@ -12,7 +12,6 @@ const ROUTE = {
     agent: 'https://judge-agent.vercel.app/api',
     user: 'https://llm-user.vercel.app/api',
     submission: 'https://llm-submission.vercel.app/api',
-    worldId: 'https://llm-world.vercel.app/api',
 };
 
 async function execute(path: string, method: string = 'GET', body?: {}) {
@@ -97,15 +96,6 @@ export async function submit(
         submissionURL: submission,
         participantWalletAddress: wallet,
         preferredBlockchain: blockchain,
-    });
-    return json.success;
-}
-
-export async function submitWorldId(campaignId: string, wallet: string, worldId: string) {
-    const json = await execute(`${ROUTE.worldId}/submit-via-world`, 'POST', {
-        campaignID: campaignId,
-        participantWalletAddress: wallet,
-        worldAddress: worldId,
     });
     return json.success;
 }

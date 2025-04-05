@@ -16,7 +16,7 @@ export default function DrawerAgentCard({ campaign }: { campaign: Campaign | und
     return (
         <>
             <Image
-                className='mb-9 border-[3px] border-background rounded-xl shadow-out'
+                className='mb-9 border-[3px] border-background rounded-xl shadow-xl'
                 src={campaign.agentAvatar}
                 alt='agent'
                 width={286}

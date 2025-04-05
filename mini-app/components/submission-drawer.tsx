@@ -14,18 +14,18 @@ import { useState, useCallback } from 'react';
 import { MiniKit } from '@worldcoin/minikit-js';
 import { blockchains } from '@/content/blockchains';
 
-import { quickDemo, submit, submitWorldId } from '@/helpers/serverCaller';
+import { quickDemo, submit } from '@/helpers/serverCaller';
 import { sendNotification, verifySubmitAction } from '@/helpers/world-id';
 import { blockchainTypeToName } from '@/utils';
 
 export default function SubmissionDrawer({
     campaign,
     agent,
-    setIsSubmitted,
+    setStatus,
 }: {
     campaign: CampaignInfo;
     agent: AgentInfo;
-    setIsSubmitted: (value: boolean) => void;
+    setStatus: (value: SubmissionStatus) => void;
 }) {
     const [url, setUrl] = useState('');
     const [address, setAddress] = useState('');
@@ -35,7 +35,7 @@ export default function SubmissionDrawer({
 
     const handleSubmit = useCallback(async () => {
         try {
-            if (!url || !address || !blockchain || !MiniKit.user) return;
+            if (!url || !address || !blockchain) return;
             setProcessing(true);
 
             const { user, commandsAsync } = MiniKit;
@@ -46,26 +46,23 @@ export default function SubmissionDrawer({
             }
 
             const isSubmitted = await submit(campaign.campaignId, url, address, blockchain);
-            await submitWorldId(campaign.campaignId, address, MiniKit.user.walletAddress);
             if (!isSubmitted) {
                 setProcessing(false);
                 return;
             }
 
-            try {
-                await commandsAsync.sendHapticFeedback({
-                    hapticsType: 'notification',
-                    style: 'success',
-                });
+            await commandsAsync.sendHapticFeedback({
+                hapticsType: 'notification',
+                style: 'success',
+            });
 
-                await sendNotification(
-                    user.walletAddress,
-                    'Received your submission!',
-                    'Hmmm... it’s time to read what you have for me'
-                );
-            } catch (error) {}
+            await sendNotification(
+                user.walletAddress,
+                'Received your submission!',
+                'Hmmm... it’s time to read what you have for me'
+            );
 
-            setIsSubmitted(true);
+            setStatus('PARTICIPANT');
         } catch (error) {
         } finally {
             setProcessing(false);

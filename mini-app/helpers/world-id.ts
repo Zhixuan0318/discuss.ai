@@ -7,8 +7,8 @@ import {
 } from '@worldcoin/minikit-js';
 
 export async function authWithPermission(): Promise<boolean> {
-    const { isInstalled, commandsAsync } = MiniKit;
-    if (!isInstalled()) throw new Error('MiniKit is not installed');
+    const { isInstalled, user, commandsAsync } = MiniKit;
+    if (!isInstalled() || !user) return false;
 
     const res = await fetch(`/api/nonce`);
     const { nonce } = await res.json();
@@ -20,7 +20,7 @@ export async function authWithPermission(): Promise<boolean> {
         statement: 'Authentication for Discuss AI',
     });
 
-    if (finalPayload.status === 'error') throw new Error('User is not authed');
+    if (finalPayload.status === 'error') return false;
 
     const response = await fetch('/api/complete-siwe', {
         method: 'POST',
@@ -34,11 +34,12 @@ export async function authWithPermission(): Promise<boolean> {
     });
 
     const { status } = await response.json();
-    if (status == 'error') throw new Error('Complete Siwe is not successfull');
+    if (status == 'error') return false;
 
-    await MiniKit.commandsAsync.requestPermission({
+    const payload = await MiniKit.commandsAsync.requestPermission({
         permission: Permission.Notifications,
     });
+    if (payload.finalPayload.status == 'error') return false;
 
     return true;
 }
@@ -72,13 +73,34 @@ export async function verifySubmitAction(): Promise<boolean> {
     return true;
 }
 
-export async function sendNotification(walletAddress: string, title: string, message: string) {
-    await fetch('/api/send-notification', {
-        method: 'POST',
-        body: JSON.stringify({
-            wallet_addresses: [walletAddress],
-            title,
-            message,
-        }),
-    });
+export async function sendNotification(
+    walletAddress: string,
+    title: string,
+    message: string
+): Promise<boolean> {
+    const appId = process.env.APP_ID;
+
+    try {
+        const response = await fetch(
+            'https://developer.worldcoin.org/api/v2/minikit/send-notification',
+            {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${process.env.DEV_PORTAL_API_KEY}`,
+                },
+                body: JSON.stringify({
+                    app_id: appId,
+                    wallet_addresses: [walletAddress],
+                    title,
+                    message,
+                    mini_app_path: `worldapp://mini-app?app_id=${appId}`,
+                }),
+            }
+        );
+
+        const json = await response.json();
+        return json.success;
+    } catch (error) {
+        return false;
+    }
 }

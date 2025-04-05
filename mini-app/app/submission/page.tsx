@@ -6,7 +6,6 @@ import {
     Button,
     Drawer,
     DrawerTrigger,
-    DrawerClose,
     Token,
     Typography,
 } from '@worldcoin/mini-apps-ui-kit-react';
@@ -22,7 +21,7 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 
 import { MiniKit } from '@worldcoin/minikit-js';
 
-import { fetchAgent, fetchCampaignData } from '@/helpers/serverCaller';
+import { fetchAgent, fetchCampaignData, isParticipantOrHost } from '@/helpers/serverCaller';
 
 import { blockchainToExplorer, cutHex } from '@/utils';
 import { cn } from '@/lib/utils';
@@ -37,14 +36,22 @@ function Submission() {
 
     const [modal, setModal] = useState('');
     const [typing, setTyping] = useState(true);
-    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [status, setStatus] = useState<SubmissionStatus>('PARTICIPANT');
     const confettiRef = useRef<ConfettiRef>(null);
-    const drawerClose = useRef<HTMLButtonElement>(null);
 
     const handleLink = useCallback((link: string) => router.push(link), []);
 
     useEffect(() => {
-        if (!MiniKit.user) router.push('/');
+        if (!campaignId.current) return;
+
+        const { user } = MiniKit;
+        if (user) {
+            isParticipantOrHost(user.walletAddress, campaignId.current).then((data) =>
+                setStatus(data)
+            );
+        } else {
+            router.push('/');
+        }
     }, []);
 
     useEffect(() => {
@@ -62,11 +69,7 @@ function Submission() {
         };
 
         fetchAllData();
-    }, [isSubmitted]);
-
-    useEffect(() => {
-        if (isSubmitted) drawerClose.current?.click();
-    }, [isSubmitted]);
+    }, []);
 
     useEffect(() => {
         if (!agent) return;
@@ -143,7 +146,7 @@ function Submission() {
                 <section
                     className={cn(
                         'w-full p-6 grid grid-cols-3 gap-y-5 items-center justify-items-center border border-quaternary rounded-xl',
-                        campaign.winner ? 'mb-3' : 'mb-auto'
+                        campaign.winner ? '' : 'mb-auto'
                     )}
                 >
                     <div className='flex items-center gap-x-2'>
@@ -236,16 +239,16 @@ function Submission() {
                 ) : (
                     <Drawer>
                         <DrawerTrigger>
-                            <Button variant='primary' fullWidth disabled={isSubmitted}>
+                            <Button
+                                variant='primary'
+                                fullWidth
+                                radius='lg'
+                                disabled={status != 'PARTICIPANT'}
+                            >
                                 Submit
                             </Button>
                         </DrawerTrigger>
-                        <SubmissionDrawer
-                            campaign={campaign}
-                            agent={agent}
-                            setIsSubmitted={setIsSubmitted}
-                        />
-                        <DrawerClose ref={drawerClose} />
+                        <SubmissionDrawer campaign={campaign} agent={agent} setStatus={setStatus} />
                     </Drawer>
                 )}
             </section>
