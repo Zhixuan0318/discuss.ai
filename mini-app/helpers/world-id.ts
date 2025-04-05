@@ -36,10 +36,9 @@ export async function authWithPermission(): Promise<boolean> {
     const { status } = await response.json();
     if (status == 'error') throw new Error('Complete Siwe is not successfull');
 
-    const payload = await MiniKit.commandsAsync.requestPermission({
+    await MiniKit.commandsAsync.requestPermission({
         permission: Permission.Notifications,
     });
-    if (payload.finalPayload.status == 'error') throw new Error('Permission was not granted');
 
     return true;
 }
