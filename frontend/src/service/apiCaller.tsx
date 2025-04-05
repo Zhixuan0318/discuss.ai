@@ -9,10 +9,14 @@ type DemoType =
 const ROUTE = {
     circle: 'https://llm-circle.vercel.app/api',
     campaign: 'https://llm-campaign.vercel.app/api',
+    demo: 'https://llm-quick-demo.vercel.app/api',
     agent: 'https://judge-agent.vercel.app/api',
     avatar: 'https://llm-avatar.vercel.app/api',
     embed: 'https://llm-embedder.vercel.app/api',
+    ens: 'https://llm-ens.vercel.app/api',
     user: 'https://llm-user.vercel.app/api',
+    submission: 'https://llm-submission.vercel.app/api',
+    ranking: 'https://ranking-task.vercel.app/api',
 };
 
 async function execute(path: string, method: string = 'GET', body?: {}) {
@@ -94,6 +98,29 @@ export async function isParticipantOrHost(
         campaignID: campaignId,
     });
     return json.status;
+}
+
+export async function submit(
+    campaignId: string,
+    submission: string,
+    wallet: string,
+    blockchain: Blockchain
+) {
+    const json = await execute(`${ROUTE.submission}/submit-and-judge`, 'POST', {
+        campaignID: campaignId,
+        submissionURL: submission,
+        participantWalletAddress: wallet,
+        preferredBlockchain: blockchain,
+    });
+    return json.success;
+}
+
+export async function endDiscussion(campaignId: string) {
+    const json = await execute(`${ROUTE.ranking}/`, 'POST', {
+        campaignID: campaignId,
+    });
+    console.log(json);
+    return json.success;
 }
 
 export async function createAgent(campaign: CampaignCreation) {

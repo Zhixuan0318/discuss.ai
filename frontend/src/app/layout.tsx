@@ -4,6 +4,7 @@ import { Sora, DM_Mono, Rubik } from 'next/font/google';
 import WalletProvider from '@/context/WalletProvider';
 import { ModalProvider } from '@/components/ui/animated-modal';
 import { CampaignProvider } from '@/context/CampaignProvider';
+import { Toaster } from '@/components/ui/toaster';
 
 import '@rainbow-me/rainbowkit/styles.css';
 import './globals.css';
@@ -41,7 +42,10 @@ export default function RootLayout({
             <body className={`${sora.variable} ${dmMono.variable} ${rubik.variable} antialiased`}>
                 <ModalProvider>
                     <WalletProvider>
-                        <CampaignProvider>{children}</CampaignProvider>
+                        <CampaignProvider>
+                            {children}
+                            <Toaster />
+                        </CampaignProvider>
                     </WalletProvider>
                 </ModalProvider>
             </body>

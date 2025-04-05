@@ -33,6 +33,14 @@ declare global {
         submissionNumber: number;
         timestamp: string;
         walletId: string;
+        winner?: {
+            preferredBlockchain: Blockchain;
+            score: number;
+            submissionURL: string;
+            transferExecutionDuration: string;
+            txHash: string;
+            walletAddress: string;
+        };
     }
 
     interface AgentInfo {

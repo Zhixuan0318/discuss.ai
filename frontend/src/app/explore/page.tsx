@@ -3,17 +3,26 @@
 import NavBar from '@/components/nav-bar';
 import AgentCardExplorer from '@/components/ui/agent-card-explorer';
 
+import { useAccount } from 'wagmi';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
 import { fetchCampaigns } from '@/service/apiCaller';
 
 export default function Explore() {
+    const router = useRouter();
+    const { isDisconnected, isConnecting } = useAccount();
+
     const [campaigns, setCampaigns] = useState<Campaign[] | undefined[]>(Array(4).fill(undefined));
 
     const handleLoadCampaigns = useCallback(async () => {
         const loaded = await fetchCampaigns();
         setCampaigns(loaded);
     }, [campaigns]);
+
+    useEffect(() => {
+        if (isDisconnected && !isConnecting) router.push('/');
+    }, [isDisconnected, isConnecting]);
 
     useEffect(() => {
         handleLoadCampaigns();

@@ -16,6 +16,7 @@ const config: Config = {
                 quaternary: 'var(--quaternary)',
                 transparent: 'var(--transparent)',
                 muted: 'var(--muted)',
+                disabled: 'var(--text-disabled)',
                 'color-1': 'hsl(var(--color-1))',
                 'color-2': 'hsl(var(--color-2))',
                 'color-3': 'hsl(var(--color-3))',

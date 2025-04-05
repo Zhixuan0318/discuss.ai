@@ -1,24 +1,39 @@
 'use client';
 
+import Link from 'next/link';
 import NavBar from '@/components/nav-bar';
 import Image from 'next/image';
-import { Suspense } from 'react';
+import { Suspense, useCallback } from 'react';
 import { TypingAnimation } from '@/components/magicui/terminal';
 import CampaignModal from '@/components/ui/campaign-modal';
+import SubmitModal from '@/components/submit-modal';
+import { Skeleton } from '@/components/ui/skeleton';
+import { WarpBackground } from '@/components/magicui/warp-background';
+import { Confetti, ConfettiRef } from '@/components/magicui/confetti';
 
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useAccount } from 'wagmi';
+import { useToast } from '@/hooks/use-toast';
 
-import { fetchAgent, fetchCampaignData, isParticipantOrHost } from '@/service/apiCaller';
-import { Skeleton } from '@/components/ui/skeleton';
+import {
+    endDiscussion,
+    fetchAgent,
+    fetchCampaignData,
+    isParticipantOrHost,
+} from '@/service/apiCaller';
+
 import { cn } from '@/lib/utils';
+import { blockchainToExplorer, cutHex } from '@/utils';
 
 function Submission() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { address, isConnected, isConnecting } = useAccount();
+
+    const { toast } = useToast();
+    const confettiRef = useRef<ConfettiRef>(null);
 
     const campaignId = useRef(searchParams.get('campaign'));
     const [campaign, setCampaign] = useState<CampaignInfo>();
@@ -29,17 +44,46 @@ function Submission() {
     const [open, setOpen] = useState(false);
     const [modal, setModal] = useState('');
 
+    const [isEnding, setIsEnding] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [submitModal, setSubmitModal] = useState(false);
+
+    const handleSubmission = useCallback(async () => {
+        if (!campaignId.current) return;
+
+        if (status == 'ELIGIBLE-TO-SUBMIT') setSubmitModal(true);
+        else {
+            setIsEnding(true);
+            const result = await endDiscussion(campaignId.current);
+            if (result) {
+                const campaignData = await fetchCampaignData(campaignId.current);
+                setCampaign(campaignData);
+            } else setIsEnding(false);
+        }
+    }, [status]);
+
     useEffect(() => {
         if (!isConnected && !isConnecting) router.push('/explore');
-        if (campaignId.current && address) {
+        if (campaignId.current && address)
             isParticipantOrHost(address, campaignId.current).then((data) => setStatus(data));
-        }
-    }, [address, isConnected]);
+    }, [address, isConnected, isSubmitted]);
 
     useEffect(() => {
         if (!agent) return;
         setTimeout(() => setTyping(false), 3_000);
     }, [agent]);
+
+    useEffect(() => {
+        if (isSubmitted)
+            toast({
+                style: {
+                    right: '3.5rem',
+                    width: 'max-content',
+                },
+                title: 'Received your submission!',
+                description: `Hmmmm.... it's time for me to see what you have for me`,
+            });
+    }, [isSubmitted]);
 
     useEffect(() => {
         const fetchAllData = async () => {
@@ -56,9 +100,9 @@ function Submission() {
         };
 
         fetchAllData();
-    }, []);
+    }, [isSubmitted]);
 
-    if (!campaign || !agent)
+    if (!campaign || !agent || !address)
         return (
             <>
                 <NavBar />
@@ -75,6 +119,15 @@ function Submission() {
     return (
         <>
             <NavBar />
+            <SubmitModal
+                open={submitModal}
+                setOpen={setSubmitModal}
+                setIsSubmitted={setIsSubmitted}
+                image={agent.avatar}
+                campaignId={campaignId.current as string}
+                userWallet={address}
+                campaignBlockchain={campaign.blockchain}
+            />
             <CampaignModal agent={agent} modal={modal} open={open} setOpen={setOpen} />
             <main className='flex justify-center'>
                 <div className='mt-14 flex flex-col items-center justify-center gap-y-4'>
@@ -145,23 +198,102 @@ function Submission() {
                             height={47}
                         />
                         <h1 className='font-dm-mono text-5xl'>{campaign.submissionNumber}</h1>
-                        <h4>Prize Pool</h4>
+                        <Link
+                            className='underline'
+                            href={`${blockchainToExplorer(campaign.blockchain)}/address/${
+                                campaign.poolAddress
+                            }`}
+                            target='_blank'
+                        >
+                            Prize Pool
+                        </Link>
                         <h4>Mode of winning</h4>
                         <h4>Submissions</h4>
                     </section>
-                    <button
-                        className={cn(
-                            'mt-16 primary-button pr-24 pl-24 duration-700',
-                            typing ? 'opacity-0' : 'opacity-100'
-                        )}
-                        disabled={status == 'PARTICIPANT'}
-                    >
-                        {status == 'PARTICIPANT'
-                            ? 'Submitted'
-                            : status == 'ELIGIBLE-TO-SUBMIT'
-                            ? 'Submit'
-                            : 'End the discussion'}
-                    </button>
+
+                    {campaign.winner ? (
+                        <WarpBackground
+                            gridColor='var(--tetriary)'
+                            className={cn(
+                                'py-6 w-full font-dm-mono duration-700',
+                                typing ? 'opacity-0' : 'opacity-100'
+                            )}
+                        >
+                            <Confetti
+                                ref={confettiRef}
+                                options={{ origin: { x: 0.5, y: 1 } }}
+                                className='absolute left-0 bottom-0 z-0 size-full'
+                                onLoadedDataCapture={() => confettiRef.current?.fire({})}
+                            />
+                            <div className='px-12 py-6 flex flex-col items-center gap-y-7 bg-background rounded-xl border border-quaternary'>
+                                <h4>The discussion concludes and we have our winner.</h4>
+                                <Link
+                                    className='underline'
+                                    href={`${blockchainToExplorer(campaign.blockchain)}/address/${
+                                        campaign.winner.walletAddress
+                                    }`}
+                                    target='_blank'
+                                >
+                                    {cutHex(campaign.winner.walletAddress)}
+                                </Link>
+                                <div className='flex flex-col gap-y-2 text-center'>
+                                    <Link
+                                        className='underline'
+                                        href={campaign.winner.submissionURL}
+                                        target='_blank'
+                                    >
+                                        Medium submission
+                                    </Link>
+                                    <Link
+                                        className='flex items-center gap-x-1 border-b border-foreground'
+                                        href={`${blockchainToExplorer(campaign.blockchain)}/tx/${
+                                            campaign.winner.txHash
+                                        }`}
+                                        target='_blank'
+                                    >
+                                        {`${campaign.poolAmount}`}
+                                        <Image
+                                            src={'/images/icons/usdc.svg'}
+                                            alt='usdc'
+                                            width={16}
+                                            height={16}
+                                        />
+                                        {`from ${campaign.blockchain} to ${campaign.winner.preferredBlockchain} in ${campaign.winner.transferExecutionDuration}`}
+                                    </Link>
+                                </div>
+                            </div>
+                        </WarpBackground>
+                    ) : (
+                        <div className='mt-16'>
+                            {isEnding ? (
+                                <div className='w-full text-center'>
+                                    <h4 className='mb-5 font-dm-mono'>
+                                        Still running the scans, pushing limits to judge the elite.{' '}
+                                        <br /> Curious to see who claims the ultimate reward...
+                                    </h4>
+                                    <div className='justify-self-center w-8 h-8 rounded-full border-2 border-foreground border-t-[transparent] animate-spin' />
+                                </div>
+                            ) : (
+                                <button
+                                    className={cn(
+                                        'primary-button pr-24 pl-24 duration-700',
+                                        typing ? 'opacity-0' : 'opacity-100'
+                                    )}
+                                    disabled={
+                                        status == 'PARTICIPANT' ||
+                                        (status == 'HOST' && campaign.submissionNumber == 0)
+                                    }
+                                    onClick={handleSubmission}
+                                >
+                                    {status == 'PARTICIPANT'
+                                        ? 'Submitted'
+                                        : status == 'ELIGIBLE-TO-SUBMIT'
+                                        ? 'Submit'
+                                        : 'End the discussion'}
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </div>
             </main>
         </>

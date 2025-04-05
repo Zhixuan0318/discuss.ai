@@ -11,6 +11,7 @@
     --tetriary: #b1b1b1;
     --quaternary: #ebecef;
 
+    --text-disabled: #9ba3ae;
     --button-hover: #434343;
     --transparent: rgba(1, 1, 1, 0.5);
 
@@ -56,6 +57,7 @@
     }
 
     .primary-button:disabled {
+        color: var(--text-disabled);
         background-color: var(--quaternary);
     }
 

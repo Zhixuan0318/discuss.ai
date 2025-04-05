@@ -19,7 +19,7 @@ export default function Home() {
     const [walletConnector, setWalletConnector] = useState(false);
 
     useEffect(() => {
-        if (!address || !isConnected || !chains.find((chain) => chain.id == chainId))
+        if (address && isConnected && chains.find((chain) => chain.id == chainId))
             router.push('/explore');
     }, [isConnected, address]);
 
