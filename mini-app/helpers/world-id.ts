@@ -72,34 +72,13 @@ export async function verifySubmitAction(): Promise<boolean> {
     return true;
 }
 
-export async function sendNotification(
-    walletAddress: string,
-    title: string,
-    message: string
-): Promise<boolean> {
-    const appId = process.env.APP_ID;
-
-    try {
-        const response = await fetch(
-            'https://developer.worldcoin.org/api/v2/minikit/send-notification',
-            {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${process.env.DEV_PORTAL_API_KEY}`,
-                },
-                body: JSON.stringify({
-                    app_id: appId,
-                    wallet_addresses: [walletAddress],
-                    title,
-                    message,
-                    mini_app_path: `worldapp://mini-app?app_id=${appId}`,
-                }),
-            }
-        );
-
-        const json = await response.json();
-        return json.success;
-    } catch (error) {
-        return false;
-    }
+export async function sendNotification(walletAddress: string, title: string, message: string) {
+    await fetch('/api/send-notification', {
+        method: 'POST',
+        body: JSON.stringify({
+            wallet_addresses: [walletAddress],
+            title,
+            message,
+        }),
+    });
 }

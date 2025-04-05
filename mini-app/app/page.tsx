@@ -4,7 +4,7 @@ import { Marquee } from '@/components/magicui/marquee';
 import AgentCardSmall from '@/components/ui/agent-card-small';
 import { Button, Typography } from '@worldcoin/mini-apps-ui-kit-react';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { MiniKit } from '@worldcoin/minikit-js';
@@ -15,10 +15,13 @@ import { authWithPermission } from '@/helpers/world-id';
 
 export default function Home() {
     const router = useRouter();
+    const [processing, setProcessing] = useState(false);
 
     const handleAuth = useCallback(async () => {
+        setProcessing(true);
         const isSuccess = await authWithPermission();
         if (isSuccess) router.push('/explore');
+        else setProcessing(false);
     }, []);
 
     useEffect(() => {
@@ -57,7 +60,13 @@ export default function Home() {
                 </Marquee>
             </div>
             <div className='p-3 w-full justify-self-end'>
-                <Button variant='primary' radius='lg' fullWidth onClick={handleAuth}>
+                <Button
+                    variant='primary'
+                    radius='lg'
+                    fullWidth
+                    onClick={handleAuth}
+                    isLoading={processing}
+                >
                     Join the race
                 </Button>
             </div>

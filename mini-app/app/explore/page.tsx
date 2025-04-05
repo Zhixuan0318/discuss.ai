@@ -11,24 +11,14 @@ import DrawerAgentCard from '@/components/ui/drawer-agent-card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-
-import { MiniKit } from '@worldcoin/minikit-js';
 
 import { fetchCampaigns } from '@/helpers/serverCaller';
 
 export default function Explore() {
-    const router = useRouter();
-
     const [campaigns, setCampaigns] = useState<Campaign[] | undefined[]>(Array(6).fill(undefined));
     const [selectedCampaign, setSelectedCampgain] = useState<Campaign>();
 
     useEffect(() => {
-        const { isInstalled, user } = MiniKit;
-        if (!isInstalled() || !user) {
-            router.push('/');
-            return;
-        }
         fetchCampaigns().then((data) => setCampaigns(data));
     }, []);
 
@@ -42,21 +32,25 @@ export default function Explore() {
             </Typography>
             <Drawer>
                 <section className='relative grid grid-cols-2 gap-4'>
-                    {campaigns.map((campgaing) => {
-                        return campgaing ? (
+                    {campaigns.map((campaign, index) => {
+                        return campaign ? (
                             <DrawerTrigger
-                                className='w-full border-[3px] border-background rounded-3xl shadow-xl overflow-hidden'
-                                onClick={() => setSelectedCampgain(campgaing)}
+                                key={campaign.campaignID}
+                                className='w-full border-[3px] border-background rounded-3xl shadow-out overflow-hidden'
+                                onClick={() => setSelectedCampgain(campaign)}
                             >
                                 <Image
-                                    src={campgaing.agentAvatar}
+                                    src={campaign.agentAvatar}
                                     alt='agent'
                                     width={156}
                                     height={156}
                                 />
                             </DrawerTrigger>
                         ) : (
-                            <Skeleton className='w-full pt-[100%] rounded-3xl shadow-xl' />
+                            <Skeleton
+                                key={index}
+                                className='w-full pt-[100%] rounded-3xl shadow-out'
+                            />
                         );
                     })}
                 </section>

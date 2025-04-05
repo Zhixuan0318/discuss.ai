@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
 import { Sora, DM_Mono, Rubik } from 'next/font/google';
 
 import MiniKitProvider from '@/components/minikit-provider';
@@ -36,12 +35,6 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const ErudaProvider = dynamic(
-        () => import('../components/Eruda').then((c) => c.ErudaProvider),
-        {
-            ssr: false,
-        }
-    );
     return (
         <html lang='en'>
             <head>
@@ -54,9 +47,7 @@ export default function RootLayout({
             </head>
             <body className={`${sora.className} ${dmMono.className} ${rubik.className}`}>
                 <NextAuthProvider>
-                    <ErudaProvider>
-                        <MiniKitProvider>{children}</MiniKitProvider>
-                    </ErudaProvider>
+                    <MiniKitProvider>{children}</MiniKitProvider>
                 </NextAuthProvider>
             </body>
         </html>
