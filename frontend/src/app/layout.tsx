@@ -3,6 +3,7 @@ import { Sora, DM_Mono, Rubik } from 'next/font/google';
 
 import WalletProvider from '@/context/WalletProvider';
 import { ModalProvider } from '@/components/ui/animated-modal';
+import { CampaignProvider } from '@/context/CampaignProvider';
 
 import '@rainbow-me/rainbowkit/styles.css';
 import './globals.css';
@@ -21,7 +22,7 @@ const sora = Sora({
 const dmMono = DM_Mono({
     variable: '--font-dm-mono',
     subsets: ['latin'],
-    weight: ['500'],
+    weight: ['400', '500'],
 });
 
 const rubik = Rubik({
@@ -39,7 +40,9 @@ export default function RootLayout({
         <html lang='en'>
             <body className={`${sora.variable} ${dmMono.variable} ${rubik.variable} antialiased`}>
                 <ModalProvider>
-                    <WalletProvider>{children}</WalletProvider>
+                    <WalletProvider>
+                        <CampaignProvider>{children}</CampaignProvider>
+                    </WalletProvider>
                 </ModalProvider>
             </body>
         </html>

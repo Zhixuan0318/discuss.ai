@@ -14,13 +14,14 @@ import { chains } from '@/config/wagmi';
 
 export default function Home() {
     const router = useRouter();
-    const { isConnected, chainId } = useAccount();
+    const { address, isConnected, chainId } = useAccount();
 
     const [walletConnector, setWalletConnector] = useState(false);
 
     useEffect(() => {
-        if (isConnected && chains.find((chain) => chain.id == chainId)) router.push('/explore');
-    }, [isConnected]);
+        if (!address || !isConnected || !chains.find((chain) => chain.id == chainId))
+            router.push('/explore');
+    }, [isConnected, address]);
 
     return (
         <main className='h-dvh flex flex-col gap-y-10 items-center justify-center text-center'>

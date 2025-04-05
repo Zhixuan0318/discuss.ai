@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import CreateAgent from './create-agent';
+import HostAgent from './host-agent';
 
 import { useState } from 'react';
 
@@ -11,7 +11,7 @@ export default function NavBar({ hostButton }: { hostButton?: boolean }) {
 
     return (
         <nav className='p-5 flex items-center justify-between border-b border-quaternary'>
-            {hostButton && <CreateAgent openModal={openModal} setOpenModal={setOpenModal} />}
+            {hostButton && <HostAgent openModal={openModal} setOpenModal={setOpenModal} />}
             <Link href={'/explore'} className='font-dm-mono text-xl font-medium cursor-pointer'>
                 discuss.ai
             </Link>

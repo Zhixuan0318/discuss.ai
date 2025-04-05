@@ -15,6 +15,7 @@ const config: Config = {
                 tetriary: 'var(--tetriary)',
                 quaternary: 'var(--quaternary)',
                 transparent: 'var(--transparent)',
+                muted: 'var(--muted)',
                 'color-1': 'hsl(var(--color-1))',
                 'color-2': 'hsl(var(--color-2))',
                 'color-3': 'hsl(var(--color-3))',
@@ -33,8 +34,19 @@ const config: Config = {
                 marquee: 'marquee var(--duration) linear infinite',
                 'marquee-vertical': 'marquee-vertical var(--duration) linear infinite',
                 shine: 'shine var(--duration) infinite linear',
+                appear: 'appear 500ms ease-in-out forwards',
             },
             keyframes: {
+                appear: {
+                    from: {
+                        transform: 'translateX(100%)',
+                        opacity: '0',
+                    },
+                    to: {
+                        transform: 'translateX(75%)',
+                        opacity: '100',
+                    },
+                },
                 rainbow: {
                     '0%': {
                         'background-position': '0%',

@@ -5,6 +5,7 @@
 :root {
     --background: #ffffff;
     --foreground: #191c20;
+    --muted: #74747d;
 
     --secondary: #9ba3ae;
     --tetriary: #b1b1b1;
@@ -18,6 +19,20 @@
     --color-3: 210 100% 63%;
     --color-4: 195 100% 63%;
     --color-5: 90 100% 63%;
+}
+
+@layer base {
+    input:focus {
+        outline: none;
+    }
+
+    textarea:focus {
+        outline: none;
+    }
+
+    textarea::-webkit-resizer {
+        display: none;
+    }
 }
 
 @layer components {
@@ -38,6 +53,10 @@
 
     .primary-button:hover {
         background-color: var(--button-hover);
+    }
+
+    .primary-button:disabled {
+        background-color: var(--quaternary);
     }
 
     .secondary-button {
@@ -64,6 +83,29 @@
         padding: 1rem 2rem;
 
         background: var(--quaternary);
+        border-radius: 1.25rem;
+    }
+
+    .textarea {
+        padding: 1.25rem;
+        border: 1px solid var(--quaternary);
+        border-radius: 1.25rem;
+        transition: all 300ms;
+    }
+
+    .textarea:focus {
+        border-color: var(--foreground);
+    }
+
+    .subdomain {
+        padding: 1rem;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        column-gap: 0.75rem;
+
+        background: linear-gradient(91.6deg, #718ef6 4%, #5d93f2 52.05%, #48b5f1 98%);
         border-radius: 1.25rem;
     }
 }
