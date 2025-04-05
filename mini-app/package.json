@@ -1,0 +1,38 @@
+{
+    "name": "app-router-template",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@radix-ui/react-slot": "^1.1.2",
+        "@types/canvas-confetti": "^1.9.0",
+        "@worldcoin/mini-apps-ui-kit-react": "^0.0.8",
+        "@worldcoin/minikit-js": "^1.8.0",
+        "canvas-confetti": "^1.9.3",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
+        "eruda": "^3.2.3",
+        "motion": "^12.6.2",
+        "next": "14.2.6",
+        "next-auth": "^4.24.7",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "tailwind-merge": "^3.0.2",
+        "wagmi": "^2.14.15"
+    },
+    "devDependencies": {
+        "@types/node": "^20.16.1",
+        "@types/react": "^18.3.4",
+        "@types/react-dom": "^18.3.0",
+        "eslint": "^8.57.0",
+        "eslint-config-next": "14.2.6",
+        "postcss": "^8.4.41",
+        "tailwindcss": "^3.4.10",
+        "typescript": "^5.5.4"
+    }
+}

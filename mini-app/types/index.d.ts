@@ -1,0 +1,53 @@
+export {};
+
+declare global {
+    type Blockchain = 'ETH-SEPOLIA' | 'ARB-SEPOLIA' | 'AVAX-FUJI' | 'MATIC-AMOY' | 'UNI-SEPOLIA';
+    type Mode = 'single-winner';
+    type SubmissionStatus = 'HOST' | 'PARTICIPANT' | 'ELIGIBLE-TO-SUBMIT';
+
+    interface Campaign {
+        campaignID: string;
+        agentID: string;
+        agentName: string;
+        campaignName: string;
+        agentENS: string | null;
+        agentAvatar: string;
+        mode: Mode;
+        isRevealed: boolean;
+        poolAmount: string;
+    }
+
+    interface CampaignInfo {
+        agentId: string;
+        blockchain: Blockchain;
+        campaignId: string;
+        hostWalletAddress: string;
+        isRanking: boolean;
+        isRevealed: boolean;
+        mode: Mode;
+        name: string;
+        poolAddress: string;
+        poolAmount: number;
+        submissionNumber: number;
+        timestamp: string;
+        walletId: string;
+        winner?: {
+            preferredBlockchain: Blockchain;
+            score: number;
+            submissionURL: string;
+            transferExecutionDuration: string;
+            txHash: string;
+            walletAddress: string;
+        };
+    }
+
+    interface AgentInfo {
+        avatar: string;
+        expectation: string;
+        lightLore: string;
+        name: string;
+        references: string[];
+        rules: string;
+        scoring: Criteria[];
+    }
+}
