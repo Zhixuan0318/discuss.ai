@@ -71,8 +71,8 @@ export default function Generate() {
             <section className='flex items-center justify-center w-full h-3/5'>
                 <Terminal
                     className={cn(
-                        'w-1/2 transform-all duration-500',
-                        image ? '-translate-x-1/2 w-2/5' : ''
+                        'w-3/4 transform-all duration-500',
+                        image ? '-translate-x-1/3 w-1/2' : ''
                     )}
                 >
                     <TypingAnimation>{`Creating ${campaign.name}`}</TypingAnimation>
@@ -102,7 +102,7 @@ export default function Generate() {
                     )}
                 </Terminal>
                 {image && (
-                    <div className='absolute animate-appear'>
+                    <div className='absolute top-[16rem] animate-appear'>
                         <h4 className='mb-3 font-dm-mono text-center'>coolImage.jpg</h4>
                         <Image
                             className='p-3 shadow-lg rounded-3xl'
@@ -111,18 +111,21 @@ export default function Generate() {
                             width={364}
                             height={364}
                         />
-                        {subdomain && (
-                            <div className='mt-3 subdomain'>
-                                <Image src={'/images/ens.png'} alt='ens' width={24} height={28} />
-                                <Link
-                                    href={`https://app.ens.domains/${subdomain}`}
-                                    target='_blank'
-                                    className='text-xl font-semibold text-white'
-                                >
-                                    {subdomain}
-                                </Link>
-                            </div>
-                        )}
+                        <div
+                            className={cn(
+                                'mt-3 subdomain duration-700',
+                                subdomain ? 'opacity-100' : 'hidden opacity-0'
+                            )}
+                        >
+                            <Image src={'/images/ens.png'} alt='ens' width={24} height={28} />
+                            <Link
+                                href={`https://sepolia.app.ens.domains/${subdomain}`}
+                                target='_blank'
+                                className='text-xl font-semibold text-white'
+                            >
+                                {subdomain}
+                            </Link>
+                        </div>
                     </div>
                 )}
             </section>

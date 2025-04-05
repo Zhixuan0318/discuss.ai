@@ -145,9 +145,16 @@ function Submission() {
                             height={86}
                         />
                         <div className='font-dm-mono text-center'>
-                            <h4> Hi. My name is {agent.name}. I think it is time to discuss</h4>
-                            <TypingAnimation className='font-medium text-base' duration={50}>
-                                {campaign.name}
+                            <TypingAnimation className='text-base' duration={25}>
+                                {`Hi. My name is ${agent.name}. I think it is time to discuss `}
+                            </TypingAnimation>
+                            <br />
+                            <TypingAnimation
+                                className='font-medium text-base'
+                                duration={25}
+                                delay={1400}
+                            >
+                                {`"${campaign.name}"`}
                             </TypingAnimation>
                         </div>
                     </section>
@@ -212,57 +219,62 @@ function Submission() {
                     </section>
 
                     {campaign.winner ? (
-                        <WarpBackground
-                            gridColor='var(--tetriary)'
+                        <div
                             className={cn(
-                                'py-6 w-full font-dm-mono duration-700',
+                                'rounded-xl border border-quaternary duration-700',
                                 typing ? 'opacity-0' : 'opacity-100'
                             )}
                         >
                             <Confetti
                                 ref={confettiRef}
-                                options={{ origin: { x: 0.5, y: 1 } }}
-                                className='absolute left-0 bottom-0 z-0 size-full'
+                                options={{ origin: { x: 0.5, y: 0.7 } }}
+                                className='absolute left-0 bottom-0 z-10 size-full pointer-events-none'
                                 onLoadedDataCapture={() => confettiRef.current?.fire({})}
                             />
-                            <div className='px-12 py-6 flex flex-col items-center gap-y-7 bg-background rounded-xl border border-quaternary'>
-                                <h4>The discussion concludes and we have our winner.</h4>
-                                <Link
-                                    className='underline'
-                                    href={`${blockchainToExplorer(campaign.blockchain)}/address/${
-                                        campaign.winner.walletAddress
-                                    }`}
-                                    target='_blank'
-                                >
-                                    {cutHex(campaign.winner.walletAddress)}
-                                </Link>
-                                <div className='flex flex-col gap-y-2 text-center'>
+                            <WarpBackground
+                                perspective={350}
+                                gridColor='var(--tetriary)'
+                                className='py-6 w-full font-dm-mono rounded-xl overflow-hidden'
+                            >
+                                <div className='px-12 py-6 flex flex-col items-center gap-y-7 bg-background rounded-xl border border-quaternary'>
+                                    <h4>The discussion concludes and we have our winner.</h4>
                                     <Link
                                         className='underline'
-                                        href={campaign.winner.submissionURL}
+                                        href={`${blockchainToExplorer(
+                                            campaign.blockchain
+                                        )}/address/${campaign.winner.walletAddress}`}
                                         target='_blank'
                                     >
-                                        Medium submission
+                                        {cutHex(campaign.winner.walletAddress)}
                                     </Link>
-                                    <Link
-                                        className='flex items-center gap-x-1 border-b border-foreground'
-                                        href={`${blockchainToExplorer(campaign.blockchain)}/tx/${
-                                            campaign.winner.txHash
-                                        }`}
-                                        target='_blank'
-                                    >
-                                        {`${campaign.poolAmount}`}
-                                        <Image
-                                            src={'/images/icons/usdc.svg'}
-                                            alt='usdc'
-                                            width={16}
-                                            height={16}
-                                        />
-                                        {`from ${campaign.blockchain} to ${campaign.winner.preferredBlockchain} in ${campaign.winner.transferExecutionDuration}`}
-                                    </Link>
+                                    <div className='flex flex-col gap-y-2 text-center'>
+                                        <Link
+                                            className='underline'
+                                            href={campaign.winner.submissionURL}
+                                            target='_blank'
+                                        >
+                                            Medium submission
+                                        </Link>
+                                        <Link
+                                            className='flex items-center gap-x-1 border-b border-foreground'
+                                            href={`${blockchainToExplorer(
+                                                campaign.blockchain
+                                            )}/tx/${campaign.winner.txHash}`}
+                                            target='_blank'
+                                        >
+                                            {`${campaign.poolAmount}`}
+                                            <Image
+                                                src={'/images/icons/usdc.svg'}
+                                                alt='usdc'
+                                                width={16}
+                                                height={16}
+                                            />
+                                            {`from ${campaign.blockchain} to ${campaign.winner.preferredBlockchain} in ${campaign.winner.transferExecutionDuration}`}
+                                        </Link>
+                                    </div>
                                 </div>
-                            </div>
-                        </WarpBackground>
+                            </WarpBackground>
+                        </div>
                     ) : (
                         <div className='mt-16'>
                             {isEnding ? (

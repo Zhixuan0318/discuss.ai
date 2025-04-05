@@ -12,16 +12,23 @@ import { useAccount } from 'wagmi';
 import { agentCards } from '@/content/agent-cards';
 import { chains } from '@/config/wagmi';
 
+import { cn } from '@/lib/utils';
+
 export default function Home() {
     const router = useRouter();
     const { address, isConnected, chainId } = useAccount();
 
     const [walletConnector, setWalletConnector] = useState(false);
+    const [nameBlink, setNameBlink] = useState(false);
 
     useEffect(() => {
         if (address && isConnected && chains.find((chain) => chain.id == chainId))
             router.push('/explore');
     }, [isConnected, address]);
+
+    useEffect(() => {
+        setTimeout(() => setNameBlink(!nameBlink), 1_000);
+    }, [nameBlink]);
 
     return (
         <main className='h-dvh flex flex-col gap-y-10 items-center justify-center text-center'>
@@ -29,7 +36,20 @@ export default function Home() {
                 walletConnector={walletConnector}
                 setWalletConnector={setWalletConnector}
             />
-            <h3 className='font-medium text-tetriary'>discuss.ai</h3>
+            <h3 className='font-medium text-secondary'>
+                discuss.a
+                <span
+                    className={cn('transition-all duration-500', nameBlink ? 'text-gray-300' : '')}
+                >
+                    nyth
+                </span>
+                i
+                <span
+                    className={cn('transition-all duration-500', nameBlink ? 'text-gray-300' : '')}
+                >
+                    ng
+                </span>
+            </h3>
             <h1 className='font-light text-6xl'>
                 The Web3.0 Discussions for Humans. <br /> Led by Intelligent Agents
             </h1>

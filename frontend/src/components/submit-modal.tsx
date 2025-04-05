@@ -8,6 +8,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { IDKitWidget, ISuccessResult, useIDKit, VerificationLevel } from '@worldcoin/idkit';
 
 import { useCallback, useState } from 'react';
 
@@ -37,6 +38,8 @@ export default function SubmitModal({
     userWallet,
     campaignBlockchain,
 }: Props) {
+    const idKit = useIDKit();
+
     const [processing, setProcessing] = useState(false);
     const [submission, setSubmission] = useState('');
     const [blockchain, setBlockchain] = useState<Blockchain>(campaignBlockchain);
@@ -68,6 +71,24 @@ export default function SubmitModal({
                 open ? 'translate-y-0' : 'translate-y-[100dvh]'
             )}
         >
+            <IDKitWidget
+                app_id={process.env.NEXT_PUBLIC_WORLDCOIN_APP_ID as any}
+                action={'submit'}
+                onSuccess={(_result) => handleSubmission()}
+                handleVerify={async (result: ISuccessResult) => {
+                    const response = await fetch('/api/worldcoin', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ proof: result, action: 'submit' }),
+                    });
+
+                    if (response.status == 500) throw new Error('Server error');
+                    if (response.status == 400) throw new Error('Verification error');
+                }}
+                verification_level={VerificationLevel.Device}
+            />
             <section className='w-3/5 p-9 flex flex-col gap-y-3 bg-background rounded-3xl'>
                 <Image className='rounded-xl' src={image} alt='avatar' width={86} height={86} />
                 <div className='flex justify-between items-center'>
@@ -152,7 +173,7 @@ export default function SubmitModal({
                         <button
                             className='w-full primary-button'
                             disabled={!submission}
-                            onClick={handleSubmission}
+                            onClick={() => idKit.setOpen(true)}
                         >
                             Confirm my submission
                         </button>

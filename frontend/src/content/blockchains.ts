@@ -13,7 +13,7 @@ export const blockchains = [
         fullName: 'Ethereum Sepolia',
         chainId: sepolia.id,
         usdc: '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238',
-        explorer: 'https://sepolia.etherscan.io',
+        explorer: 'https://eth-sepolia.blockscout.com',
     },
     {
         img: 'arbitrum',

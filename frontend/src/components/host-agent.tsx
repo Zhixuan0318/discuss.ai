@@ -12,6 +12,8 @@ import { CampaignContext } from '@/context/CampaignProvider';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useModal } from './ui/animated-modal';
 
+import { quickDemo } from '@/service/apiCaller';
+
 import { randomNames } from '@/content/random-names';
 import { agentCards } from '@/content/agent-cards';
 
@@ -48,9 +50,10 @@ export default function HostAgent({ openModal, setOpenModal }: Props) {
         setOpen(true);
     }, []);
 
-    const handleRandomNames = useCallback(() => {
+    const handleRandomNames = useCallback(async () => {
+        const randomNames = await quickDemo('name');
         setRotation(rotation + 180);
-        setNames(selectRandomFrom(randomNames, 4));
+        setNames(randomNames);
     }, [rotation]);
 
     const handleCloseModal = useCallback((event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -119,7 +122,7 @@ export default function HostAgent({ openModal, setOpenModal }: Props) {
                         'Any ideas for my name?',
                     ]}
                     onChange={(event) => setName(event.currentTarget.value)}
-                    onSubmit={() => setSubmit(true)}
+                    onSubmit={() => setTimeout(() => setSubmit(true), 1_000)}
                 />
                 <section
                     className={cn(

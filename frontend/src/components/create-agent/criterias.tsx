@@ -30,7 +30,7 @@ export default function Criterias({ scoring, setScoring }: Props) {
             if (inputIndex == 2) value = Number(value);
             if (Number.isNaN(value)) value = 0;
             const copy = [...scoring];
-            //@ts-ignore
+            //@ts-expect-error
             copy[criteriaIndex][key] = value;
             setScoring(copy);
         },
@@ -45,10 +45,11 @@ export default function Criterias({ scoring, setScoring }: Props) {
             </div>
             <section className='flex flex-col gap-y-4'>
                 {scoring.map((criteria, index) => (
-                    <div className='w-full flex gap-x-5'>
+                    <div key={index} className='w-full flex gap-x-5'>
                         <div className='w-full p-5 pr-8 pl-8 flex items-center gap-x-4 border border-quaternary rounded-3xl'>
                             {Object.entries(criteria).map(([key, value], idx) => (
                                 <input
+                                    key={index + key + idx}
                                     className={cn('textarea', idx == 1 ? 'w-full' : '')}
                                     type='text'
                                     placeholder={key[0].toUpperCase() + key.slice(1)}

@@ -63,7 +63,12 @@ export default function WalletConnector({ walletConnector, setWalletConnector }:
                             )}
                             onClick={() => setChain(chainId)}
                         >
-                            {chain == chainId && <ShineBorder />}
+                            {chain == chainId && (
+                                <ShineBorder
+                                    borderWidth={2}
+                                    shineColor={['#A07CFE', '#FE8FB5', '#FFBE7B']}
+                                />
+                            )}
                             <Image
                                 className='w-8 h-8'
                                 src={`/images/blockchain/${img}.png`}

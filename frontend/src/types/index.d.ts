@@ -1,5 +1,3 @@
-import { Address } from 'viem';
-
 export {};
 
 declare global {

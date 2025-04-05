@@ -15,6 +15,7 @@ const config: Config = {
                 tetriary: 'var(--tetriary)',
                 quaternary: 'var(--quaternary)',
                 transparent: 'var(--transparent)',
+                'transparent-full': 'var(--transparent-full)',
                 muted: 'var(--muted)',
                 disabled: 'var(--text-disabled)',
                 'color-1': 'hsl(var(--color-1))',
@@ -40,11 +41,11 @@ const config: Config = {
             keyframes: {
                 appear: {
                     from: {
-                        transform: 'translateX(100%)',
+                        transform: 'translateX(0%)',
                         opacity: '0',
                     },
                     to: {
-                        transform: 'translateX(75%)',
+                        transform: 'translateX(22rem)',
                         opacity: '100',
                     },
                 },

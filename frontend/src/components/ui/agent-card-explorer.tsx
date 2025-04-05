@@ -10,6 +10,21 @@ import { useRouter } from 'next/navigation';
 import { camelCaseToNormalText } from '@/utils';
 
 export default function AgentCardExplorer({ campaign }: { campaign: Campaign | undefined }) {
+    const router = useRouter();
+    const [isHover, setIsHover] = useState(false);
+
+    const handleClick = useCallback(
+        (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+            if (!campaign) return;
+            const clickedOn = event.target as HTMLElement;
+
+            if (clickedOn.id == 'campaignENS')
+                router.push(`https://sepolia.app.ens.domains/${campaign.agentENS}`);
+            else router.push(`/submission?campaign=${campaign.campaignID}`);
+        },
+        [campaign]
+    );
+
     if (!campaign)
         return (
             <figure className='relative w-[600px] p-3 flex gap-x-7 border border-quaternary hover:border-background transition-all duration-300 rounded-3xl cursor-pointer'>
@@ -30,20 +45,6 @@ export default function AgentCardExplorer({ campaign }: { campaign: Campaign | u
             </figure>
         );
 
-    const router = useRouter();
-    const [isHover, setIsHover] = useState(false);
-
-    const handleClick = useCallback(
-        (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-            const clickedOn = event.target as HTMLElement;
-
-            if (clickedOn.id == 'campaignENS')
-                router.push(`https://app.ens.domains/${campaign.agentENS}`);
-            else router.push(`/submission?campaign=${campaign.campaignID}`);
-        },
-        [campaign]
-    );
-
     return (
         <figure
             onClick={handleClick}
@@ -51,7 +52,9 @@ export default function AgentCardExplorer({ campaign }: { campaign: Campaign | u
             onMouseLeave={() => setIsHover(false)}
             className='relative min-w-fit w-[600px] p-3 flex gap-x-7 border border-quaternary hover:border-background transition-all duration-300 rounded-3xl cursor-pointer'
         >
-            {isHover && <ShineBorder />}
+            {isHover && (
+                <ShineBorder borderWidth={2} shineColor={['#A07CFE', '#FE8FB5', '#FFBE7B']} />
+            )}
             <Image
                 className='min-w-[182px] min-h-[182px] rounded-3xl'
                 src={campaign.agentAvatar}

@@ -31,7 +31,7 @@ export default function Explore() {
     return (
         <>
             <NavBar hostButton />
-            <main className='flex flex-col items-center'>
+            <main className='mb-11 flex flex-col items-center'>
                 <section className='mt-11 mb-11 text-center'>
                     <h3 className='mb-4 text-3xl'>Explore</h3>
                     <h4 className='font-rubik font-light'>
@@ -43,9 +43,9 @@ export default function Explore() {
                         <AgentCardExplorer key={index} campaign={campaign} />
                     ))}
                 </section>
-                <button className='mt-9 secondary-selector' onClick={handleLoadCampaigns}>
+                {/* <button className='mt-9 secondary-selector' onClick={handleLoadCampaigns}>
                     View More
-                </button>
+                </button> */}
             </main>
         </>
     );

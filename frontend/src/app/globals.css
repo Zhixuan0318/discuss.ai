@@ -14,6 +14,7 @@
     --text-disabled: #9ba3ae;
     --button-hover: #434343;
     --transparent: rgba(1, 1, 1, 0.5);
+    --transparent-full: rgba(1, 1, 1, 0);
 
     --color-1: 0 100% 63%;
     --color-2: 270 100% 63%;

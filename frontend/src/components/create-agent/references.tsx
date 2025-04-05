@@ -24,7 +24,7 @@ export default function References({ references, setReferences }: Props) {
         <section className='flex flex-col gap-y-4'>
             <h4 className='mb-5'>Any references for me?</h4>
             {references.map((reference, index) => (
-                <div className='w-full flex gap-x-5'>
+                <div key={index} className='w-full flex gap-x-5'>
                     <input
                         className='w-full textarea'
                         type='text'

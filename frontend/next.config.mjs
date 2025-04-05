@@ -7,6 +7,7 @@ const nextConfig = {
     },
     env: {
         NEXT_PUBLIC_PROJECT_ID: '',
+        NEXT_PUBLIC_WORLDCOIN_APP_ID: '',
     },
     images: {
         remotePatterns: [
