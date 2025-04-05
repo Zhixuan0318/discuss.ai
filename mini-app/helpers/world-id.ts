@@ -7,8 +7,8 @@ import {
 } from '@worldcoin/minikit-js';
 
 export async function authWithPermission(): Promise<boolean> {
-    const { isInstalled, user, commandsAsync } = MiniKit;
-    if (!isInstalled() || !user) return false;
+    const { isInstalled, commandsAsync } = MiniKit;
+    if (!isInstalled()) throw new Error('MiniKit is not installed');
 
     const res = await fetch(`/api/nonce`);
     const { nonce } = await res.json();
@@ -20,7 +20,7 @@ export async function authWithPermission(): Promise<boolean> {
         statement: 'Authentication for Discuss AI',
     });
 
-    if (finalPayload.status === 'error') return false;
+    if (finalPayload.status === 'error') throw new Error('User is not authed');
 
     const response = await fetch('/api/complete-siwe', {
         method: 'POST',
@@ -34,12 +34,12 @@ export async function authWithPermission(): Promise<boolean> {
     });
 
     const { status } = await response.json();
-    if (status == 'error') return false;
+    if (status == 'error') throw new Error('Complete Siwe is not successfull');
 
     const payload = await MiniKit.commandsAsync.requestPermission({
         permission: Permission.Notifications,
     });
-    if (payload.finalPayload.status == 'error') return false;
+    if (payload.finalPayload.status == 'error') throw new Error('Permission was not granted');
 
     return true;
 }
